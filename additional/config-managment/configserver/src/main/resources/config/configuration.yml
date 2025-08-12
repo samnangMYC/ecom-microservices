@@ -1,0 +1,12 @@
+
+build:
+  id: demo-001
+  version: 1.0.0
+  name: "Native default build"
+  type: "Native default build type"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh

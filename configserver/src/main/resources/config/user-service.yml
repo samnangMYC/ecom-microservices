@@ -1,0 +1,69 @@
+spring:
+  application:
+    name: user
+
+  data:
+    mongodb:
+      # uri: mongodb+srv://samnang:WVPmz1ftgg0ys00W@user-data.tfnz9dj.mongodb.net/userdb?retryWrites=true&w=majority&appName=user-data
+      uri: ${MONGO_URI}
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+
+  # PostgreSQL settings
+  #
+  #  datasource:
+  #     url: jdbc:postgresql://localhost:5432/userdb
+  #     username: samnang
+  #     password: samnang
+  #     driver-class-name: org.postgresql.Driver
+  #
+  #  jpa:
+  #     database: POSTGRESQL
+  #     database-platform: org.hibernate.dialect.PostgreSQLDialect
+  #     show-sql: true
+  #     hibernate:
+  #       ddl-auto: update
+
+  # H2 in-memory settings (active for testing)
+#  datasource:
+#    url: jdbc:h2:mem:userdb
+#    driver-class-name: org.h2.Driver
+#    username: sa
+#    password:
+#
+#  h2:
+#    console:
+#      enabled: true
+#      path: /h2-console
+#
+#  jpa:
+#    show-sql: true
+#    hibernate:
+#      ddl-auto: create
+
+server:
+  port: 8082
+
+management:
+  endpoint:
+    web:
+      exposure:
+        include: "*"
+
+info:
+  app:
+    name: My app
+    description: App built by my team
+    version: 1.0.0
+

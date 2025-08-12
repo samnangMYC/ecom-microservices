@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: configserver
+  profiles:
+    active: native  # Ensure you're loading local files instead of Git
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: /home/samnang/IdeaProjects/ecom-microservices/configserver/src/main/resources/config
+          # Make sure this absolute path exists and has config files (e.g., user.yml)
+
+server:
+  port: 8888
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

@@ -1,0 +1,54 @@
+
+spring:
+  application:
+    name: configserver
+  profiles:
+    active: native
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: file:/home/samnang/IdeaProjects/ecom-microservices/additional/config-managment/configserver/src/main/resources
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+#  datasource:
+#    url: jdbc:mysql://localhost:3307/configdb
+#    username: ${USER}
+#    password: ${PASSWORD}
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+
+#  cloud:
+#    config:
+#      server:
+#        jdbc:
+#          sql: SELECT prop_key, prop_value FROM properties WHERE application=? AND profile=? AND label=?
+#          default-label: main
+
+
+#  cloud:
+#    config:
+#      server:
+#        git:
+#          uri: https://github.com/samnangMYC/app-configuration
+#          username: ${GIT_USER}
+#          password: ${GIT_TOKEN}
+server:
+  port: 8888
+
+#encrypt:
+#  key: "OE329232EA6D0D73"
+
+encrypt:
+  key-store:
+    location: config-server.jks
+    password: mypass
+    alias: config-server-key

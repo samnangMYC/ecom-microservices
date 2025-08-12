@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: configuration
+
+  profiles:
+    active: dev
+
+build:
+  id: 223
+  version: 1.1.1
+  name: NAME

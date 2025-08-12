@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: order
+  datasource:
+     url: jdbc:postgresql://localhost:5532/order
+     username: ${DB_USER}
+     password: ${DB_PASSWORD}
+     driver-class-name: org.postgresql.Driver
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+  jpa:
+     database: POSTGRESQL
+     database-platform: org.hibernate.dialect.PostgreSQLDialect
+     show-sql: true
+     hibernate:
+       ddl-auto: update
+
+server:
+  port: 8083
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+management:
+  endpoint:
+    web:
+      exposure:
+        include: "*"
+app:
+  message: "Hello order"
