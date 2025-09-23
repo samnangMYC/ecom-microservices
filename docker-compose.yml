@@ -8,6 +8,7 @@ services:
       PGDATA: /data/postgres
     volumes:
       - postgres:/data/postgres
+      - ./init-multi-db.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5532:5432"
     networks:
@@ -24,10 +25,33 @@ services:
     volumes:
       - pgadmin:/var/lib/pgadmin
     ports:
-      - "5050:80"
+      - "5055:80"
     networks:
       - backend
     restart: unless-stopped
+
+  mongo:
+    container_name: mongo_container
+    image: mongo:latest
+#    environment:
+#      MONGO_INITDB_ROOT_USERNAME: admin
+#      MONGO_INITDB_ROOT_PASSWORD: admin
+    networks:
+      - backend
+    volumes:
+      - mongo:/data/db
+    ports:
+      - "27017:27017"
+  mongo-express:
+    container_name: mongo_express
+    image: mongo-express:latest
+    networks:
+      - backend
+    environment:
+      ME_CONFIG_MONGODB_ADMINURL: "mongodb://mongo:27017/"
+      #ME_CONFIG_MONGODB_ADMINURL: "mongodb://admin:admin@mongo:27017/"
+    ports:
+      - "8088:8081"  # Expose port 8081 for the web UI
 
   rabbitmq:
     container_name: rabbitmq_container
@@ -42,6 +66,15 @@ services:
       - backend
     restart: unless-stopped
 
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+    networks:
+      - backend
+
+
 networks:
   backend:
     driver: bridge
@@ -49,3 +82,5 @@ networks:
 volumes:
   postgres:
   pgadmin:
+  mongo:
+

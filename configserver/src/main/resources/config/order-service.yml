@@ -1,11 +1,13 @@
 spring:
   application:
     name: order
+
   datasource:
-     url: jdbc:postgresql://localhost:5532/order
-     username: ${DB_USER}
-     password: ${DB_PASSWORD}
-     driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5532/order
+    username: samnang
+    password: samnang
+    driver-class-name: org.postgresql.Driver
+
   rabbitmq:
     host: localhost
     port: 5672
@@ -13,11 +15,10 @@ spring:
     password: guest
 
   jpa:
-     database: POSTGRESQL
-     database-platform: org.hibernate.dialect.PostgreSQLDialect
-     show-sql: true
-     hibernate:
-       ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
 
 server:
   port: 8083
@@ -30,9 +31,43 @@ eureka:
     fetch-registry: true
 
 management:
-  endpoint:
+  endpoints:
     web:
       exposure:
         include: "*"
+  endpoint:
+    health:
+      show-details: always
+  health:
+    circuitbreakers:
+      enable: true
+  tracing:
+    sampling:
+      probability: 1.0
+
+# Circuit Breaker
+resilience4j:
+  circuitbreaker:
+    instances:
+      productService:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        waitDurationInOpenState: 10s
+        failureRateThreshold: 50
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        slidingWindowType: count_based
+  retry:
+    instances:
+      retryBreaker:
+        maxAttempts: 5
+        waitDuration: 500ms
+  rateLimiter:
+    instances:
+      retryBreaker:
+        timeout-duration: 0
+        limit-refresh-period: 4
+        limit-for-period: 2
 app:
   message: "Hello order"

@@ -1,10 +1,13 @@
 package com.samnang.order.service;
 
 import com.samnang.order.clients.ProductServiceClient;
+import com.samnang.order.clients.UserServiceClient;
 import com.samnang.order.dto.CartItemRequest;
 import com.samnang.order.dto.ProductResponse;
 import com.samnang.order.model.CartItem;
 import com.samnang.order.repositories.CartItemRepository;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,17 +21,25 @@ public class CartServiceImpl implements CartService {
 
     private final CartItemRepository cartItemRepository;
     private final ProductServiceClient productServiceClient;
+    private final UserServiceClient userServiceClient;
+    int temp = 0;
 
-    @Override
+    //@CircuitBreaker(name = "productService",fallbackMethod = "addToCartFallBack")
+    @Retry(name = "retryBreaker",fallbackMethod = "addToCartFallBack")
     public boolean addToCart(String userId, CartItemRequest request) {
 
-        ProductResponse productResponse = productServiceClient.getProductDetails(request.getProductId());
+        System.out.println("ATTEMPTING TO ADD TO CART" + temp++);
 
+        ProductResponse productResponse = productServiceClient.getProductDetails(request.getProductId());
 
         if(productResponse == null || productResponse.getStockQty() < request.getQuantity() ){
             return false;
         }
 
+        String userResponse = userServiceClient.getUserDetails(userId);
+        if(userResponse == null){
+            return false;
+        }
 
         CartItem existingCartItem = cartItemRepository.findByUserIdAndProductId(userId,request.getProductId());
 
@@ -52,7 +63,11 @@ public class CartServiceImpl implements CartService {
         }
     return true;
     }
-
+    public boolean addToCartFallBack(String userId, CartItemRequest request,Exception e) {
+        System.out.println("FALLBACK_ERROR");
+        e.printStackTrace();
+        return false;
+    }
     @Override
     public boolean deleteItemFromCart(String userId, String productId) {
        CartItem cartItem = cartItemRepository.findByUserIdAndProductId(userId,productId);
