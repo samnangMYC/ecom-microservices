@@ -9,14 +9,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import reactor.core.publisher.Mono;
 
-import java.util.Objects;
-
 @Configuration
 public class GatewayConfig {
 
     @Bean
     public RedisRateLimiter redisRateLimiter() {
-        return new RedisRateLimiter(1,1,1);
+        return new RedisRateLimiter(10,20,1);
     }
     @Bean
     KeyResolver hostNameResolver() {

@@ -2,6 +2,14 @@ spring:
   application:
     name: user
 
+keycloak:
+  admin:
+    username: user
+    password: 123
+    server-url: http://localhost:8443
+    realm: ecom-app
+    client-id: admin-cli
+
   data:
     mongodb:
       # Uncomment the one you want to use:
@@ -35,3 +43,4 @@ info:
     name: My app
     description: App built by my team
     version: 1.0.0
+

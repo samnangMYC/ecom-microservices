@@ -8,17 +8,36 @@ spring:
     password: samnang
     driver-class-name: org.postgresql.Driver
 
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
+  cloud:
+    stream:
+      bindings:
+        createOrder-out-0:
+          destination: order.exchange
+          content-type: application/json
+    kafka:
+      binder:
+        brokers: localhost:9092
+#    rabbit:
+#      bindings:
+#        createOrder-out-0:
+#          producer:
+#            routing-key-expression: 'order.tracking'
+
+
+#  rabbitmq:
+#    host: ${RABBITMQ_HOST:localhost}
+#    port: ${RABBITMQ_PORT:5672}
+#    username: ${RABBITMQ_USERNAME:guest}
+#    password: ${RABBITMQ_PASSWORD:guest}
+#    virtual-host: /
+#    connection-timeout: 30000
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
+
 
 server:
   port: 8083

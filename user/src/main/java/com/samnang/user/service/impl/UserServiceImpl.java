@@ -6,6 +6,7 @@ import com.samnang.user.repositories.UserRepository;
 import com.samnang.user.dto.AddressDTO;
 import com.samnang.user.dto.UserRequest;
 import com.samnang.user.dto.UserResponse;
+import com.samnang.user.service.KeyCloakAdminService;
 import com.samnang.user.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final KeyCloakAdminService keyCloakAdminService;
 
     @Override
     public List<UserResponse> fetchAllUsers() {
@@ -28,8 +30,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addNewUser(UserRequest userRequest) {
+        String token = keyCloakAdminService.getAdminAccessToken();
+        String keycloakUserId =
+                keyCloakAdminService.createUser(token, userRequest);
+
         User newUser = new User();
         updateUserFromRequest(newUser,userRequest);
+        newUser.setKeycloackId(keycloakUserId);
+
+        keyCloakAdminService.assignRealmRoleToUser(userRequest.getUsername(),"USER",keycloakUserId);
         userRepository.save(newUser);
     }
 
@@ -60,6 +69,7 @@ public class UserServiceImpl implements UserService {
     private UserResponse mapToUserResponse(User user){
         UserResponse userResponse = new UserResponse();
         userResponse.setId(user.getId());
+        userResponse.setKeycloakId(user.getKeycloackId());
         userResponse.setUsername(user.getUsername());
         userResponse.setEmail(user.getEmail());
         userResponse.setPassword(user.getPassword());

@@ -17,6 +17,7 @@ public class User {
 
     @Id
     private String id;
+    private String keycloackId;
     private String username;
 
     @Indexed(unique = true)

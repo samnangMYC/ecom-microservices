@@ -4,5 +4,15 @@ spring:
   config:
     import: optional:configserver:http://localhost:8888
 
+keycloak:
+  admin:
+    username: user
+    password: 123
+    server-url: http://localhost:8443
+    realm: ecom-app
+    client-id: admin-cli
+    client-uid: e0c9f112-10dd-4fe3-9213-d8b582a35691
+
 server:
   port: 8082
+

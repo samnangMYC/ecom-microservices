@@ -1,30 +1,9 @@
 spring:
-  cloud:
-    gateway:
-      routes:
-#        - id: product-service
-#          uri: lb://PRODUCT
-#          predicates:
-#            - Path=/api/products/**
-#        - id: user-service
-#          uri: lb://USER
-#          predicates:
-#            - Path=/api/users/**
-#        - id: order-service
-#          uri: lb://ORDER
-#          predicates:
-#            - Path=/api/orders/**
-#            - Path=/api/cart/**
-#        - id: eureka-server
-#          uri: http://localhost:8761
-#          predicates:
-#            - Path=/eureka
-#          filters:
-#            - SetPath=/
-#        - id: eureka-server-static
-#          uri: http://localhost:8761
-#          predicates:
-#            - Path=/eureka/**
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8443/realms/ecom-app
 
 server:
   port: 8080
@@ -54,13 +33,3 @@ resilience4j:
         failureRateThreshold: 50
         automaticTransitionFromOpenToHalfOpenEnabled: true
         slidingWindowType: count_based
-
-
-#logging:
-#  level:
-#    root: info
-#    org.springframework.cloud.gateway.route.RouteDefinitionLocator: INFO,
-#    org.springframework.cloud.gateway: TRACE
-
-
-
