@@ -1,12 +1,16 @@
 spring:
   application:
-    name: order
+    name: order-service
 
   datasource:
-    url: jdbc:postgresql://localhost:5532/order
-    username: samnang
-    password: samnang
+    url: jdbc:postgresql://postgres:5432/orders
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
 
   cloud:
     stream:
@@ -14,32 +18,25 @@ spring:
         createOrder-out-0:
           destination: order.exchange
           content-type: application/json
-    kafka:
-      binder:
-        brokers: localhost:9092
+      kafka:
+        binder:
+          brokers: kafka:9092
 
   rabbitmq:
-    host: ${RABBITMQ_HOST:localhost}
+    host: ${RABBITMQ_HOST:rabbitmq}
     port: ${RABBITMQ_PORT:5672}
     username: ${RABBITMQ_USERNAME:guest}
     password: ${RABBITMQ_PASSWORD:guest}
-    virtual-host: /
+    virtual-host: ${RABBITMQ_VHOST:/}
     connection-timeout: 30000
-
-  jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: true
-    hibernate:
-      ddl-auto: create
-
 
 server:
   port: 8083
 
 eureka:
   client:
-    serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+    service-url:
+      defaultZone: http://eureka:8761/eureka/
     register-with-eureka: true
     fetch-registry: true
 
@@ -53,12 +50,11 @@ management:
       show-details: always
   health:
     circuitbreakers:
-      enable: true
+      enabled: true
   tracing:
     sampling:
       probability: 1.0
 
-# Circuit Breaker
 resilience4j:
   circuitbreaker:
     instances:
@@ -70,7 +66,7 @@ resilience4j:
         waitDurationInOpenState: 10s
         failureRateThreshold: 50
         automaticTransitionFromOpenToHalfOpenEnabled: true
-        slidingWindowType: count_based
+        slidingWindowType: COUNT_BASED
   retry:
     instances:
       retryBreaker:
@@ -80,7 +76,6 @@ resilience4j:
     instances:
       retryBreaker:
         timeout-duration: 0
-        limit-refresh-period: 4
+        limit-refresh-period: 4s
         limit-for-period: 2
-app:
-  message: "Hello order"
+

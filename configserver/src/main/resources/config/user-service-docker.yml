@@ -1,0 +1,47 @@
+spring:
+  application:
+    name: user-service
+
+keycloak:
+  admin:
+    username: user
+    password: 123
+    server-url: http://keycloak:8443
+    realm: ecom-app
+    client-id: admin-cli
+
+  data:
+    mongodb:
+      uri: ${MONGO_URI}
+      database: userdb
+
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+    virtual-host: ${RABBITMQ_VHOST:/}
+    connection-timeout: 30000
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  tracing:
+    sampling:
+      probability: 1.0
+
+info:
+  app:
+    name: My app
+    description: App built by my team
+    version: 1.0.0
+

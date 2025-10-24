@@ -3,7 +3,7 @@ spring:
     name: product
 
   datasource:
-    url: jdbc:postgresql://localhost:5532/product
+    url: jdbc:postgresql://localhost:5532/products
     username: samnang
     password: samnang
     driver-class-name: org.postgresql.Driver
