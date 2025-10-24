@@ -3,9 +3,9 @@ spring:
     name: order
 
   datasource:
-    url: jdbc:postgresql://localhost:5532/order
-    username: samnang
-    password: samnang
+    url: jdbc:postgresql://localhost:5532/orders
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   cloud:
